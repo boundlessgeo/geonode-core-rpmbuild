@@ -1,0 +1,34 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Mac stuff
+.DS_Store
+
+# SWAP Files
+*.swp
+*~
+
+# RPM SOURCES
+*.tgz*
+*.gz*
+*.zip*
+*.war*
+*.bz2*
+
+# RPM TEMP DIRS
+rpmbuild/SOURCES/geoserver
+
+# RPMS
+BUILD/
+BUILDROOT/
+RPMS/
+SRPMS/
+*.rpm
+
+# vagrant machines
+.vagrant
