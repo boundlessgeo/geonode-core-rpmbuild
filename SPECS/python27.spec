@@ -97,7 +97,12 @@ Source1: https://docs.python.org/2/archives/python-%{version}-docs-html.tar.bz2
 Patch0: python27-0.patch
 Patch1: python27-1.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
-BuildRequires: gcc make expat-devel db4-devel gdbm-devel sqlite-devel readline-devel zlib-devel bzip2-devel openssl-devel tk-devel
+BuildRequires: gcc make expat-devel gdbm-devel sqlite-devel readline-devel zlib-devel bzip2-devel openssl-devel tk-devel
+%if %{?rhel} < 7
+BuildRequires: db4-devel
+%else
+BuildRequires: libdb-devel
+%endif
 AutoReq: no
 Prefix: %{__prefix}
 Packager: Daniel Berry <dberry@boundlessgeo.com>
