@@ -14,8 +14,10 @@ BuildRequires:	libcurl-devel
 BuildRequires:	expat-devel
 BuildRequires:	autoconf
 BuildRequires:	libtool
+%{?el6:BuildRequires: libgcj-devel}
+
 Requires:	expat, zlib, minizip
-%if %{?rhel} > 6
+%if 0%{?rhel} == 7
 Patch0: configure.ac.patch
 Patch1: file_posix.cc.patch
 Patch2: suffix.hpp.patch
@@ -40,7 +42,7 @@ using the LIBKML library.
 
 %prep
 %setup -q -n %{name}-release-%{version}
-%if %{?rhel} > 6
+%if 0%{?rhel} == 7
 %patch0 -p2
 %patch1 -p2
 %patch2 -p2

@@ -1,5 +1,5 @@
 #!/bin/bash
-TODO: just download alls ources
+TODO: just download all sources
 echo 'downloading sources'
 echo '-------------------'
 
@@ -8,8 +8,8 @@ version=`rpm -qa \*-release | grep -Ei "redhat|centos" | cut -d"-" -f3`
 pushd erlang; wget https://github.com/erlang/otp/archive/OTP-18.3.4.4.tar.gz; popd
 pushd libkml; wget https://github.com/google/libkml/archive/release-1.2.tar.gz; popd
 pushd openjpeg2; wget https://github.com/uclouvain/openjpeg/archive/v2.1.2.tar.gz; popd
-pushd gdal; wget http://download.osgeo.org/gdal/2.0.3/gdal-2.0.3.tar.gz; popd
-pushd tomcat8; wget http://apache.mirror.rafal.ca/tomcat/tomcat-8/v8.5.6/bin/apache-tomcat-8.5.6.tar.gz; popd
+pushd gdal; wget http://download.osgeo.org/gdal/2.1.2/gdal-2.1.2.tar.gz; popd
+pushd tomcat8; wget http://archive.apache.org/dist/tomcat/tomcat-8/v8.5.8/bin/apache-tomcat-8.5.8.tar.gz; popd
 pushd postgis; wget http://download.osgeo.org/postgis/source/postgis-2.3.0.tar.gz; popd
 if [ $version == 7 ];then
   pushd gdal; wget https://s3.amazonaws.com/yum-geonode.boundlessps.com/src/MrSID_DSDK-9.5.1.4427-linux.x86-64.gcc48.tar.gz; popd

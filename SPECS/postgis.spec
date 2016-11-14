@@ -1,10 +1,8 @@
-
-%define pgdir /usr/pgsql-9.5
+%define pgdir /usr/pgsql-9.6
 %define mver 2.3
-%define majorversion 23
 
 Summary:        Geographic Information Systems Extensions to PostgreSQL
-Name:           postgis
+Name:           postgis2-96
 Version:        2.3.0
 Release:        1%{?dist}
 License:        GPL v2
@@ -28,10 +26,10 @@ BuildRequires:  gtk2-devel
 BuildRequires:  gettext-devel
 BuildRequires:  perl
 BuildRequires:  gcc-c++ libxslt-devel dos2unix
-BuildRequires:  postgresql95-devel
+BuildRequires:  postgresql96-devel
 
 AutoReq:        no
-Requires:       postgresql95-libs
+Requires:       postgresql96-libs
 Requires:       geos >= 3.5.0
 Requires:       proj >= 4.8.0
 Requires:       gdal >= 2.0.1
@@ -45,16 +43,6 @@ allowing it to be used as a backend spatial database for geographic information
 systems (GIS), much like ESRI's SDE or Oracle's Spatial extension. PostGIS
 follows the OpenGIS "Simple Features Specification for SQL" and will be
 submitted for conformance testing at version 1.0.
-
-%package postgresql95
-Summary:        PostGIS for PostgreSQL 9.5
-Group:          Applications/Databases
-Requires:       %{name} = %{version}
-Requires:       postgresql95-server, json-c >= 0.11
-
-%description postgresql95
-The postgresql95 package provides the PostGIS server side libraries for
-PostgreSQL 9.5.
 
 #%package utils
 #Summary:        The utils for PostGIS
@@ -73,8 +61,7 @@ Requires:       %{name} = %{version} gtk2
 The postgis-gui package provides a graphical shapefile loader and dumper for PostGIS.
 
 %prep
-%setup -q
-
+%setup -q -n postgis-%{version}
 
 %build
 LDFLAGS=-L%{pgdir}/lib
@@ -144,8 +131,6 @@ rm -rf %{buildroot}
 %{_libdir}/*
 %{_includedir}/*
 %{_mandir}/*
-
-%files postgresql95
 %{pgdir}/lib/*
 %defattr(644,root,root)
 %{pgdir}/share/contrib/postgis-%{mver}/*
@@ -164,6 +149,8 @@ rm -rf %{buildroot}
 #%{pgdir}/bin/shp2pgsql-gui
 
 %changelog
+* Sat Nov 12 2016 amirahav <arahav@boundlessgeo.com> [2.3.0-1]
+- Bump to 2.3.0 and Postgres 9.6
 * Sun Apr 24 2016 amirahav <arahav@boundlessgeo.com> [2.2.2-1]
 - Updated to 2.2.2
 * Sat Jan 16 2016 amirahav <arahav@boundlessgeo.com> [2.2.1-1]
