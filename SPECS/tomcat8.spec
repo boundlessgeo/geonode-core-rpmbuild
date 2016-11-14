@@ -208,7 +208,7 @@ if [ $1 = 0 ]; then
   service %{name} stop > /dev/null 2>&1
   chkconfig --del %{name}
   %else if 0%{?rhel} == 7
-  systemctl restart %{name} > /dev/null 2>&1
+  systemctl stop %{name} > /dev/null 2>&1
   %endif
 fi
 

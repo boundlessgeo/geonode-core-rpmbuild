@@ -56,7 +56,6 @@ gpgkey=https://yum.boundlessps.com/RPM-GPG-KEY-yum.boundlessps.com
                  xerces-c-devel \
                  zip \
                  zlib-devel \
-                 zlib-devel \
                  hdf5-devel \
                  netcdf-devel
 
