@@ -3,7 +3,7 @@
 
 Summary:        Geographic Information Systems Extensions to PostgreSQL
 Name:           postgis2-96
-Version:        2.3.0
+Version:        2.3.1
 Release:        1%{?dist}
 License:        GPL v2
 Group:          Applications/Databases
