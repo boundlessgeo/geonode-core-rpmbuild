@@ -1,6 +1,6 @@
 Summary: Geospatial Data Abstraction Library
 Name: gdal
-Version: 2.0.3
+Version: 2.1.2
 Release: 1%{?dist}
 License: MIT/X
 Group: Applications/Engineering
@@ -10,11 +10,11 @@ URL: http://www.gdal.org/
 %define debug_package %{nil}
 %define _rpmfilename %%{NAME}-%%{VERSION}-%%{RELEASE}.%%{ARCH}.rpm
 Source0: http://download.osgeo.org/gdal/gdal-%{version}.tar.gz
-%if %{?rhel} < 7
+%if 0%{?rhel} == 6
 Source1: MrSID_DSDK-9.5.1.4427-linux.x86-64.gcc44.tar.gz
-%else
+%else if 0%{?rhel} == 7
 Source1: MrSID_DSDK-9.5.1.4427-linux.x86-64.gcc48.tar.gz
-%endif%
+%endif
 BuildRequires: gcc
 BuildRequires: geos-devel >= 3.3.3
 BuildRequires: proj-devel
@@ -23,26 +23,34 @@ BuildRequires: expat-devel
 BuildRequires: sqlite-devel
 BuildRequires: libkml-devel
 BuildRequires: openjpeg2-devel
-BuildRequires: postgresql95-devel
+BuildRequires: postgresql96-devel
 BuildRequires: poppler-devel
 BuildRequires: xerces-c-devel
 BuildRequires: java-1.8.0-openjdk-devel
 BuildRequires: ant
 BuildRequires: chrpath
 BuildRequires: libtool
-BuildRequires: swig
+BuildRequires: hdf5-devel
+BuildRequires: netcdf-devel
+%{?el6:BuildRequires: swig}
+%{?el6:BuildRequires: python27-devel}
+%{?el7:BuildRequires: python-devel}
+%{?el7:BuildRequires: swig = 1.3.40}
 
 Requires: geos >= 3.3.3
-Requires: swig
+%{?el6:Requires: swig}
+%{?el7:Requires: swig = 1.3.40}
 Requires: proj
 Requires: poppler
-Requires: postgresql95-libs
+Requires: postgresql96-libs
 Requires: expat
 Requires: curl
 Requires: sqlite
 Requires: xerces-c
 Requires: libkml
 Requires: openjpeg2
+Requires: hdf5
+Requires: netcdf
 Requires: proj-devel
 
 Patch0: gdal_driverpath.patch
@@ -62,10 +70,20 @@ Summary: Header files, libraries and development documentation for %{name}.
 Group: Development/Libraries
 Requires: %{name} = %{version}-%{release}
 
+%package python
+Summary: Python bindings for gdal and ogr
+Group: System Environment/Libraries
+Requires: %{name} = %{version}-%{release}
+%{?el6:Requires: python27}
+%{?el7:Requires: python}
+
 %description devel
 This package contains the header files, static libraries and development
 documentation for %{name}. If you like to develop programs using %{name},
 you will need to install %{name}-devel.
+
+%description python
+This package contains Python bindings for GDAL/OGR library.
 
 %files devel
 %defattr(-, root, root, 0755)
@@ -92,8 +110,12 @@ mkdir -p %{buildroot}/usr/local/{include,lib}
 /bin/cp -rf %{_builddir}/%{name}-%{version}/$mrsid_name/Lidar_DSDK/include/* %{buildroot}/usr/local/include
 /bin/cp -rf %{_builddir}/%{name}-%{version}/$mrsid_name/Raster_DSDK/lib/* %{buildroot}/usr/local/lib
 /bin/cp -rf %{_builddir}/%{name}-%{version}/$mrsid_name/Raster_DSDK/include/* %{buildroot}/usr/local/include
-export LD_LIBRARY_PATH=%{buildroot}/usr/local/lib:$LD_LIBRARY_PATH
-%configure --datadir=/usr/share/gdal --disable-static --with-pg=/usr/pgsql-9.5/bin/pg_config --disable-rpath --with-mrsid=%{buildroot}/usr/local  --with-mrsid_lidar=%{buildroot}/usr/local --with-spatialite --with-curl --with-expat --with-java
+
+%if 0%{?rhel} == 6
+%configure --datadir=/usr/share/gdal --disable-static --with-pg=/usr/pgsql-9.6/bin/pg_config --disable-rpath --with-poppler --with-mrsid=%{buildroot}/usr/local  --with-mrsid_lidar=%{buildroot}/usr/local --with-spatialite --with-curl --with-expat --with-python=/usr/local/bin/python2.7 --with-java --with-hdf5 --with-netcdf
+%else if 0%{?rhel} == 7
+%configure --datadir=/usr/share/gdal --disable-static --with-pg=/usr/pgsql-9.6/bin/pg_config --disable-rpath --with-poppler --with-mrsid=%{buildroot}/usr/local  --with-mrsid_lidar=%{buildroot}/usr/local --with-spatialite --with-curl --with-expat --with-python --with-java --with-hdf5 --with-netcdf
+%endif
 
 make
 make %{?_smp_mflags}
@@ -126,6 +148,12 @@ cp swig/java/gdal.jar %{buildroot}%{lib_dir}/gdal-%{version}.jar
 QA_SKIP_BUILD_ROOT=1
 export QA_SKIP_BUILD_ROOT
 
+%if 0%{?rhel} == 6
+mkdir -p %{buildroot}/usr/local/lib
+mv %{buildroot}/usr/lib/python2.7 %{buildroot}/usr/local/lib
+find %{buildroot}%{_bindir} -type f -name '*.py' -exec sed -i 's_bin/env python.*_bin/env python2.7_' {} +
+%endif
+
 %clean
 rm -rf %{buildroot}
 rm -f /usr/local/lib/{libgeos*,libltidsdk*,libtbb*,liblti_lidar_dsdk*,liblaslib.so} && rm -f /usr/local/include/*.h && rm -rf /usr/local/include/{lidar,nitf}
@@ -141,6 +169,18 @@ rm -f /usr/local/lib/{libgeos*,libltidsdk*,libtbb*,liblti_lidar_dsdk*,liblaslib.
 %{_libdir}/gdal-%{version}.jar
 %{_libdir}/pkgconfig/gdal.pc
 
+%files python
+%defattr(-,root,root,-)
+%if 0%{?rhel} == 6
+/usr/local/lib/python2.7
+%else if 0%{?rhel} == 7
+%{python_sitearch}
+%endif
+
+%{_bindir}/*.py
+
 %changelog
+* Sat Nov 12 2016 amirahav <arahav@boundlessgeo.com> [2.1.2-1]
+- Bump to 2.1.2 and Postgres 9.6
 * Thu Nov 03 2016 BerryDaniel <dberry@boundlessgeo.com> [2.0.3-1]
 - Updated to 2.0.3

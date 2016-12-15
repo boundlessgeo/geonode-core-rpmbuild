@@ -8,7 +8,7 @@
 
 Summary:    Apache Servlet/JSP Engine, RI for Servlet 3.1/JSP 2.3 API
 Name:       tomcat8
-Version:    8.5.6
+Version:    8.5.9
 Release:    1
 License:    Apache Software License
 Group:      Networking/Daemons
@@ -100,6 +100,7 @@ cd -
 
 # Put conf in /etc/ and link back.
 install -d -m 755 %{buildroot}/%{_sysconfdir}/%{name}/Catalina/localhost
+install -m 644 %_sourcedir/%{name}/context.xml %{buildroot}/%{tomcat_home}/conf/context.xml
 mv %{buildroot}/%{tomcat_home}/conf/* %{buildroot}/%{_sysconfdir}/%{name}/
 rmdir %{buildroot}/%{tomcat_home}/conf
 cd %{buildroot}/%{tomcat_home}/
@@ -130,6 +131,7 @@ install -d -m 755 %{buildroot}/usr/{bin,sbin}
 mv %{buildroot}/%{tomcat_home}/bin/digest.sh %{buildroot}/usr/bin/%{name}-digest
 mv %{buildroot}/%{tomcat_home}/bin/tool-wrapper.sh %{buildroot}/usr/bin/%{name}-tool-wrapper
 
+%if 0%{?rhel} == 6
 # Drop init script
 install -d -m 755 %{buildroot}/%{_initrddir}
 install    -m 755 %_sourcedir/%{name}.init %{buildroot}/%{_initrddir}/%{name}
@@ -137,6 +139,10 @@ install    -m 755 %_sourcedir/%{name}.init %{buildroot}/%{_initrddir}/%{name}
 # Drop sysconfig script
 install -d -m 755 %{buildroot}/%{_sysconfdir}/sysconfig/
 install    -m 644 %_sourcedir/%{name}.sysconfig %{buildroot}/%{_sysconfdir}/sysconfig/%{name}
+%else if 0%{?rhel} == 7
+install -d -m 755 %{buildroot}/%{_sysconfdir}/systemd/system
+install -m 644 %_sourcedir/%{name}/%{name}.service %{buildroot}/%{_sysconfdir}/systemd/system/%{name}.service
+%endif
 
 # Drop logrotate script
 install -d -m 755 %{buildroot}/%{_sysconfdir}/logrotate.d
@@ -158,9 +164,15 @@ getent passwd %{tomcat_user} >/dev/null || /usr/sbin/useradd --comment "Tomcat D
 %{tomcat_home}/*
 %attr(0755,root,root) /usr/bin/*
 %dir /var/lib/%{name}
+
+%if 0%{?rhel} == 6
 %{_initrddir}/%{name}
-%{_sysconfdir}/logrotate.d/%{name}
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
+%else if 0%{?rhel} == 7
+%{_sysconfdir}/systemd/system/%{name}.service
+%endif
+
+%{_sysconfdir}/logrotate.d/%{name}
 %config(noreplace) %{_sysconfdir}/%{name}
 %doc /usr/share/doc/%{name}-%{version}
 %defattr(0644,root,root,0755)
@@ -184,19 +196,33 @@ getent passwd %{tomcat_user} >/dev/null || /usr/sbin/useradd --comment "Tomcat D
 /var/lib/%{name}/webapps/ROOT
 
 %post
+%if 0%{?rhel} == 6
 chkconfig --add %{name}
+%else if 0%{?rhel} == 7
+systemctl daemon-reload
+%endif
 
 %preun
 if [ $1 = 0 ]; then
+  %if 0%{?rhel} == 6
   service %{name} stop > /dev/null 2>&1
   chkconfig --del %{name}
+  %else if 0%{?rhel} == 7
+  systemctl stop %{name} > /dev/null 2>&1
+  %endif
 fi
 
 %postun
 if [ $1 -ge 1 ]; then
-  service %{name} condrestart >/dev/null 2>&1
+  %if 0%{?rhel} == 6
+  service %{name} condrestart > /dev/null 2>&1
+  %else if 0%{?rhel} == 7
+  systemctl condrestart %{name} > /dev/null 2>&1
+  %endif
 fi
 
 %changelog
+* Sat Nov 12 2016 amirahav <arahav@boundlessgeo.com> [8.5.8-1]
+- Bump to 8.5.8
 * Thu Nov 03 2016 BerryDaniel <dberry@boundlessgeo.com> [8.5.6-1]
 - Updated to 8.5.6
