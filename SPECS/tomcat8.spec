@@ -100,7 +100,7 @@ cd -
 
 # Put conf in /etc/ and link back.
 install -d -m 755 %{buildroot}/%{_sysconfdir}/%{name}/Catalina/localhost
-install -m 644 %_sourcedir/%{name}/context.xml %{buildroot}/%{tomcat_home}/conf/context.xml
+install -m 644 %_sourcedir/context.xml %{buildroot}/%{tomcat_home}/conf/context.xml
 mv %{buildroot}/%{tomcat_home}/conf/* %{buildroot}/%{_sysconfdir}/%{name}/
 rmdir %{buildroot}/%{tomcat_home}/conf
 cd %{buildroot}/%{tomcat_home}/
@@ -141,7 +141,7 @@ install -d -m 755 %{buildroot}/%{_sysconfdir}/sysconfig/
 install    -m 644 %_sourcedir/%{name}.sysconfig %{buildroot}/%{_sysconfdir}/sysconfig/%{name}
 %else if 0%{?rhel} == 7
 install -d -m 755 %{buildroot}/%{_sysconfdir}/systemd/system
-install -m 644 %_sourcedir/%{name}/%{name}.service %{buildroot}/%{_sysconfdir}/systemd/system/%{name}.service
+install -m 644 %_sourcedir/%{name}.service %{buildroot}/%{_sysconfdir}/systemd/system/%{name}.service
 %endif
 
 # Drop logrotate script
