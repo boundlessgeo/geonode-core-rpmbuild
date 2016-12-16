@@ -111,6 +111,8 @@ mkdir -p %{buildroot}/usr/local/{include,lib}
 /bin/cp -rf %{_builddir}/%{name}-%{version}/$mrsid_name/Raster_DSDK/lib/* %{buildroot}/usr/local/lib
 /bin/cp -rf %{_builddir}/%{name}-%{version}/$mrsid_name/Raster_DSDK/include/* %{buildroot}/usr/local/include
 
+export LD_LIBRARY_PATH=%{buildroot}/usr/local/lib:$LD_LIBRARY_PATH
+
 %if 0%{?rhel} == 6
 %configure --datadir=/usr/share/gdal --disable-static --with-pg=/usr/pgsql-9.6/bin/pg_config --disable-rpath --with-poppler --with-mrsid=%{buildroot}/usr/local  --with-mrsid_lidar=%{buildroot}/usr/local --with-spatialite --with-curl --with-expat --with-python=/usr/local/bin/python2.7 --with-java --with-hdf5 --with-netcdf
 %else if 0%{?rhel} == 7
