@@ -10,6 +10,7 @@ Source: ftp://ftp.hdfgroup.org/HDF5/current/src/hdf5-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 %define _unpackaged_files_terminate_build 0
 %define debug_package %{nil}
+%define _rpmfilename %{name}-%{version}-%{release}.%{arch}.rpm
 BuildRequires: binutils
 BuildRequires: bison
 BuildRequires: flex
