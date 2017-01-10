@@ -10,7 +10,7 @@ Source: ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 %define _unpackaged_files_terminate_build 0
 %define debug_package %{nil}
-%define _rpmfilename %{name}-%{version}-%{release}.%{arch}.rpm
+%define _rpmfilename %%{NAME}-%%{VERSION}-%%{RELEASE}.%%{ARCH}.rpm
 BuildRequires: binutils
 BuildRequires: gcc-c++
 BuildRequires: gcc-gfortran
