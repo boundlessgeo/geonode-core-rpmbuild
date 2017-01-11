@@ -13,6 +13,7 @@ pushd tomcat8; wget http://archive.apache.org/dist/tomcat/tomcat-8/v8.5.9/bin/ap
 pushd postgis; wget http://download.osgeo.org/postgis/source/postgis-2.3.1.tar.gz; popd
 pushd hdf5; wget http://hdf4.org/ftp/HDF5/current18/src/hdf5-1.8.18.tar.gz; popd
 pushd netcdf; wget ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-4.4.1.1.tar.gz; popd
+pushd socat; wget http://www.dest-unreach.org/socat/download/socat-1.7.2.4.tar.bz2; popd
 if [ $version == 7 ];then
   pushd gdal; wget https://s3.amazonaws.com/yum-geonode.boundlessps.com/src/MrSID_DSDK-9.5.1.4427-linux.x86-64.gcc48.tar.gz; popd
 else
