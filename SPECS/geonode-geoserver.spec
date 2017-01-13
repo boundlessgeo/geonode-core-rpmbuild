@@ -16,9 +16,9 @@
 %endif
 
 %if %{?commit:1}0
-%define release %{_release}.%{commit}%{?dist}
+%define release %{_release}.%{commit}
 %else
-%define release %{_release}%{?dist}
+%define release %{_release}
 %endif
 
 %define realname geoserver
