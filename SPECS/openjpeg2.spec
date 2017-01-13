@@ -1,10 +1,10 @@
 Summary:	An open-source JPEG 2000 codec
 Name:		openjpeg2
-Version:	2.1.2
+Version:	2.1
 Release:	1%{?dist}
 License:	BSD
 Group:		Libraries
-Source0:	https://github.com/uclouvain/openjpeg/archive/v%{version}.tar.gz
+Source0:	https://github.com/uclouvain/openjpeg/archive/version.%{version}.tar.gz
 Patch0:		%{name}-headers.patch
 URL:		http://www.openjpeg.org/
 BuildRequires:	cmake >= 2.8.2
@@ -34,7 +34,7 @@ This package contains the header file needed for developing programs
 using the OpenJPEG 2 library.
 
 %prep
-%setup -q -n openjpeg-%{version}
+%setup -q -n openjpeg-version.%{version}
 %patch0 -p1
 
 %build
@@ -62,7 +62,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS.md CHANGELOG.md LICENSE NEWS.md README.md THANKS.md
+%doc CHANGES LICENSE README
 %attr(755,root,root) %{_libdir}/libopenjp2.so.*.*.*
 %{_libdir}/libopenjp2.so
 %{_libdir}/libopenjp2.so.7
@@ -76,5 +76,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/libopenjp2.3*
 
 %changelog
+* Thu Nov 03 2016 BerryDaniel <dberry@boundlessgeo.com> [2.1.0-1]
+- Rolled back to 2.1.0 due to GEOINT ATO
+
 * Thu Nov 03 2016 BerryDaniel <dberry@boundlessgeo.com> [2.1.2-1]
 - Updated to 2.1.2
